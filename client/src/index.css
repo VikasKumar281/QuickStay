@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+
+@import "tailwindcss";
+
+
+*{
+  font-family: Outfit;
+}
+
+.font-playfair{
+  font-family: Playfair !important;
+} 
+
+
+
+/* 
+  Here " * " is a universal selector, which applies styles to all elements on the page.,
+  This sets the default font for your whole website to "Outfit".
+ */
