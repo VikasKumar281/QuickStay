@@ -12,3 +12,13 @@
 - Use Clerk for Authentication
   - Install Clerk package in project using command => npm install @clerk/clerk-react
   - Set your clerk api key using .env file 
+
+- Upload the Project on Github using the commands =>
+  - git init
+  - git add client
+  - git commit -m "first commit"
+  - git branch -M main
+  - git remote add origin your gitub repo link
+  - git push -u origin main
+
+- Created the Hero Component and set the background image of home page
