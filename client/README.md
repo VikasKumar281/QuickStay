@@ -30,3 +30,5 @@
 
 - Created Users Testimonial Section in Home page
   - I use prebuiltUI's Testimonial Section code
+
+- Created Newsletter Subscription section 
