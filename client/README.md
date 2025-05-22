@@ -24,6 +24,9 @@
 
 - Created the Hero Component and set the background image of home page
 
-- Created Featured Destination Section
+- Created Featured Destination Section in Home page
 
-- 
+- Created Exclusive Offers Section in Home page 
+
+- Created Users Testimonial Section in Home page
+  - I use prebuiltUI's Testimonial Section code
