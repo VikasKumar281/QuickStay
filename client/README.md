@@ -9,6 +9,7 @@
   - Command => npm react-router-dom
 
 - Create the Navigation bar using prebuiltUI 
+
 - Use Clerk for Authentication
   - Install Clerk package in project using command => npm install @clerk/clerk-react
   - Set your clerk api key using .env file 
@@ -22,3 +23,7 @@
   - git push -u origin main
 
 - Created the Hero Component and set the background image of home page
+
+- Created Featured Destination Section
+
+- 
