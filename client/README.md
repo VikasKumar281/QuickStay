@@ -32,3 +32,5 @@
   - I use prebuiltUI's Testimonial Section code
 
 - Created Newsletter Subscription section 
+
+- Created Footer Section
