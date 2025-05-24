@@ -33,4 +33,10 @@
 
 - Created Newsletter Subscription section 
 
+<<<<<<< HEAD
 - Created Footer Section
+=======
+- Created Footer Section
+
+- Created Hotel Rooms Page
+>>>>>>> 5449bcb (Reconnect to GitHub)
