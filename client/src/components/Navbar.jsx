@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useEffect, useRef, useState } from "react";
-=======
-import React, { useEffect, useState } from "react";
->>>>>>> 5449bcb (Reconnect to GitHub)
+import { useEffect, useState } from "react";
 import { Link , useLocation, useNavigate } from "react-router-dom";
 import {assets} from "../assets/assets";
 import { useClerk, useUser , UserButton } from "@clerk/clerk-react";
@@ -21,12 +17,6 @@ const Navbar = () => {
         { name: 'Experience', path: '/' },
         { name: 'About', path: '/' },
     ];
- 
-
-<<<<<<< HEAD
-    const ref = useRef(null)
-=======
->>>>>>> 5449bcb (Reconnect to GitHub)
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,27 +28,8 @@ const Navbar = () => {
 
 
 // Commonly Used in a navbar component to change its style (like background or shadow) after the user scrolls.
-    useEffect(() => {
-<<<<<<< HEAD
-
-        if(location.pathname !== '/'){
-            setIsScrolled(true);
-        }  
-        else{
-            setIsScrolled(false);
-        }
-
-        // But you already handled that above, so this line can be removed.
-        setIsScrolled(prev => location.pathname !== '/' ? true : prev );
-
-        
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [location.pathname]);
-=======
+    
+useEffect(() => {
     const handleScroll = () => {
         setIsScrolled(window.scrollY > 10 || location.pathname !== '/');
     };
@@ -69,7 +40,7 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
    }, [location.pathname]);
->>>>>>> 5449bcb (Reconnect to GitHub)
+
 
     return (
                 <nav className={`fixed top-0 left-0 ${isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg" : "bg-transparent"} w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${isScrolled ? "py-3 md:py-4" : "py-4 md:py-6"}`}>
