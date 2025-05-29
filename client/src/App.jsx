@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Footer from './components/Footer';
 
 import AllRooms from './pages/AllRooms';
+import RoomDetails from './pages/RoomDetails';
 
 
 
@@ -19,6 +20,7 @@ const App = () => {
           <Routes>
              <Route path='/' element = { <Home/> } />,
              <Route path='/rooms' element = { <AllRooms /> } />,
+             <Route path='/rooms/:id' element = { <RoomDetails /> } />,
   
           </Routes> 
       </div>

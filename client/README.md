@@ -38,3 +38,5 @@
 
 - Created Hotel Rooms Page
 
+- Created Room Details Page
+
