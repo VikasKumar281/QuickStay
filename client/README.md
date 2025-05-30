@@ -40,3 +40,4 @@
 
 - Created Room Details Page
 
+- Created My Bookings Page
