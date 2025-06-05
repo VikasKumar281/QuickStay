@@ -16,29 +16,41 @@ const CheckBox = ({ label , selected = false , onChange = () => { }}) => {
             </span>
 
         </label>
-    )
-} 
+    );
+}; 
 
-const RadioButton = ({ label , selected = false , onChange = () => { }}) => {
+const RadioButton = ({ label, selected = false, onChange = () => {} }) => {
+  return (
+    <label className="flex gap-3 items-center cursor-pointer mt-2 text-sm">
+      <input
+        type="radio"
+        name="sortOption"
+        checked={selected}
+        onChange={() => onChange(label)}
+      />
+      <span className="font-light select-none">{label}</span>
+    </label>
+  );
+};
 
-    return(
-        <label className='flex gap-3 items-center cursor-pointer mt-2 text-sm'>
-            
-            <input type='checkbox' name = "sortOption" checked = { selected } onChange = {() => onChange( label )}/>
 
-            <span className='font-light selected-none'>
-                {label}
-            </span>
 
-        </label>
-    )
-} 
 
 
 const AllRooms = () => {
 
   const navigate = useNavigate();
   const [openFilters , setOpenFilters ] = useState(false);
+  const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [selectedSortOption, setSelectedSortOption] = useState(null);
+
+  const clearFilters = () => {
+  setSelectedRoomTypes([]);
+  setSelectedPriceRanges([]);
+  setSelectedSortOption(null);
+  };
+
 
 
   const roomTypes = [
@@ -157,7 +169,13 @@ const AllRooms = () => {
                         {openFilters ? 'HIDE' : 'SHOW'}
                     </span>
                     
-                    <span className='hidden lg:block'>CLEAR</span>
+                    <span
+                      className="hidden lg:block cursor-pointer text-blue-600 hover:underline"
+                      onClick={clearFilters}
+                    >
+                      CLEAR
+                    </span>
+
                 </div>
             </div>
 
@@ -170,9 +188,19 @@ const AllRooms = () => {
                     Popular Filters
                   </p>
 
-                  {roomTypes.map(( room , index ) => (
-                    <CheckBox Key ={ index } label ={room} />
+                  {roomTypes.map((room, index) => (
+                    <CheckBox
+                      key={index}
+                      label={room}
+                      selected={selectedRoomTypes.includes(room)}
+                      onChange={(checked, label) => {
+                      setSelectedRoomTypes(prev =>
+                      checked ? [...prev, label] : prev.filter(item => item !== label)
+                        );
+                      }}
+                    />
                   ))}
+
 
                </div>
 
@@ -182,23 +210,34 @@ const AllRooms = () => {
                     Price Range
                   </p>
 
-                  {priceRanges.map(( range , index ) => (
-                    <CheckBox Key ={ index } label ={ ` $ ${range}` } />
+                  {priceRanges.map((range, index) => (
+                    <CheckBox
+                      key={index}
+                      label={`$ ${range}`}
+                      selected={selectedPriceRanges.includes(`$ ${range}`)}
+                      onChange={(checked, label) => {
+                      setSelectedPriceRanges(prev =>
+                      checked ? [...prev, label] : prev.filter(item => item !== label)
+                        );
+                       }}
+                    />
                   ))}
+
 
                 </div>
 
-                <div className='px-5 pt-5 pb-7'>
-                  
-                  <p className='font-medium text-gray-800 pb-2'>
-                    Sort By
-                  </p>
-
-                  {sortOptions.map(( option , index ) => (
-                     <RadioButton key ={index} label = {option}  />
-                  ))}
-
+                <div className="px-5 pt-5 pb-7">
+                   <p className="font-medium text-gray-800 pb-2">Sort By</p>
+                   {sortOptions.map((option, index) => (
+                     <RadioButton
+                       key={index}
+                       label={option}
+                       selected={selectedSortOption === option}
+                       onChange={setSelectedSortOption}
+                     />
+                    ))}
                 </div>
+
 
             </div>
 
@@ -207,6 +246,6 @@ const AllRooms = () => {
 
     </div>
   )
-}
+};
 
-export default AllRooms
+export default AllRooms;
