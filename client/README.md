@@ -1,4 +1,6 @@
 # QuickStay
+
+## Frontend =>
 - Create your react project using Vite package
   - Command => npm create vite@latest
 
@@ -46,3 +48,23 @@
   - Created Dashboard Page
   - Created Add Room Page
   - Created List Room Page
+
+
+## Backend =>
+
+- Create a server folder
+  - create a server.js file
+  - create package.json file using the command => npm init -y
+
+  - Install these packages =>
+    - npm i express dotenv cors mongoose cloudinary multer svix
+
+  - Install nodemon => npm i --save-dev nodemon 
+    - nodemon automatically restarts your Node.js app whenever you make changes to the code. 
+
+  - Connect mongoDB database
+  
+  - Install clerk package => npm install @ clerk/express
+  
+  - Create a Svix instance with clerk webhook secret
+
