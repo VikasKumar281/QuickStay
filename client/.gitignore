@@ -1,2 +1,26 @@
-.env 
-node_modules
+# dependencies
+node_modules/
+
+# Clerk auto-generated files
+client/@clerk*
+server/@clerk*
+
+# build output
+dist/
+build/
+
+# environment files
+*.env
+
+# source maps
+*.map
+
+# Vite cache
+.vite/
+
+# Clerk chunks
+**/chunk-*.js
+**/chunk-*.map
+
+# IDE configs (optional)
+.vscode/
