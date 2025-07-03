@@ -2,19 +2,20 @@
 
 ## Frontend =>
 - Create your react project using Vite package
-  - Command => npm create vite@latest
+  - Command => npm create vite@latest .
 
 - Install the Dependencies
-  - Use the Command => npm install
+  - Use the Command => npm install .
 
 - Install  react-router-dom in the project
-  - Command => npm react-router-dom
+  - Command => npm react-router-dom .
 
-- Create the Navigation bar using prebuiltUI 
+- Create the Navigation bar using prebuiltUI .
+ 
+- Use Clerk for Authentication =>
+  - Install Clerk package in project using command => npm install @clerk/clerk-react.
 
-- Use Clerk for Authentication
-  - Install Clerk package in project using command => npm install @clerk/clerk-react
-  - Set your clerk api key using .env file 
+  - Set your clerk api key using .env file .
 
 - Upload the Project on Github using the commands =>
   - git init
@@ -24,47 +25,64 @@
   - git remote add origin your gitub repo link
   - git push -u origin main
 
-- Created the Hero Component and set the background image of home page
+- Created the Hero Component and set the background image of home page .
 
-- Created Featured Destination Section in Home page
+- Created Featured Destination Section in Home page .
 
-- Created Exclusive Offers Section in Home page 
+- Created Exclusive Offers Section in Home page .
 
 - Created Users Testimonial Section in Home page
-  - I use prebuiltUI's Testimonial Section code
+  - I use prebuiltUI's Testimonial Section code .
 
-- Created Newsletter Subscription section 
+- Created Newsletter Subscription section .
 
 
-- Created Footer Section
+- Created Footer Section .
 
-- Created Hotel Rooms Page
+- Created Hotel Rooms Page .
 
-- Created Room Details Page
+- Created Room Details Page .
 
-- Created My Bookings Page
+- Created My Bookings Page .
 
-- Created Admin Dashboard 
-  - Created Dashboard Page
-  - Created Add Room Page
-  - Created List Room Page
+- Created Admin Dashboard =>
+  - Created Dashboard Page .
+  - Created Add Room Page .
+  - Created List Room Page .
 
 
 ## Backend =>
 
 - Create a server folder
   - create a server.js file
-  - create package.json file using the command => npm init -y
+  - create package.json file using the command => npm init -y .
 
   - Install these packages =>
-    - npm i express dotenv cors mongoose cloudinary multer svix
+    - npm i express dotenv cors mongoose cloudinary multer svix .
 
   - Install nodemon => npm i --save-dev nodemon 
-    - nodemon automatically restarts your Node.js app whenever you make changes to the code. 
+    - nodemon automatically restarts your Node.js app whenever you make changes to the code.
 
-  - Connect mongoDB database
+    - For latest version of nodemon use command => npm install -D nodemon@latest .
+
+  - Connect mongoDB database.
   
-  - Install clerk package => npm install @ clerk/express
+  - Install clerk package => npm install @ clerk/express.
   
-  - Create a Svix instance with clerk webhook secret
+  - Create a Svix instance with clerk webhook secret.
+
+  - Setup Clerk authentication in Backend.
+
+  - Create API for users.
+
+  - Created the API for Hotels =>
+    - Create the API for add the rooms in hotel and get the list of rooms.
+    
+    - Connected the Cloudinary where we store the images.
+
+    - Created an API to fetch all rooms.
+
+    - Created an API to get all rooms for a specific hotel
+
+ 
 
