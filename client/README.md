@@ -84,5 +84,7 @@
 
     - Created an API to get all rooms for a specific hotel
 
+- Created Booking API    
+
  
 
