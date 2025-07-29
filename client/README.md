@@ -84,7 +84,10 @@
 
     - Created an API to get all rooms for a specific hotel
 
-- Created Booking API    
+- Created Booking API
+
+- Now we will connect the Backend to Frontend
+
 
  
 

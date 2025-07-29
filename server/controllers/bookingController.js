@@ -1,5 +1,8 @@
-import Booking from "../models/Booking";
-import Room from "../models/Room";
+// bookingController.js
+import Booking from '../models/Booking.js';
+
+import Room from "../models/Room.js";
+import Hotel from "../models/Hotel.js";
 
 
 

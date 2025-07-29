@@ -27,7 +27,6 @@ const clerkWebHooks = async (req , res) => {
             email: data.email_addresses[0].email_address,
             username: data.first_name + " " + data.last_name,
             image: data.image_url,
-            recentSearchCities: [],
          }
 
          // Switch Cases for different Events
