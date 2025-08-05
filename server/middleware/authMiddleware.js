@@ -14,6 +14,7 @@ export const protect = async (req, res, next) => {
     else {
         const user = await User.findById(userId);
         req.user = user;
-        next();
+        next();  
     }
 };
+ 

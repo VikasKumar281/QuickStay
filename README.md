@@ -88,6 +88,9 @@
 
 - Now we will connect the Backend to Frontend
 
+- Install 2 packages 'axios' and 'react-hot-toast' => npm i axios react-hot-toast
+
+- Created 'List Your Hotel' button on Navbar 
 
  
 
