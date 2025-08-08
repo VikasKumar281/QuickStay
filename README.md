@@ -90,7 +90,7 @@
 
 - Install 2 packages 'axios' and 'react-hot-toast' => npm i axios react-hot-toast
 
-- Created 'List Your Hotel' button on Navbar 
+- Created 'List Your Hotel' button on Navbar using that anyone can Register their hotel.
 
  
 

@@ -6,7 +6,6 @@ const clerkWebHooks = async (req , res) => {
     try{
         // Create a Svix instance with clerk webhook secret
          const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-
          // Getting Headers 
          const headers = {
               "svix-id": req.headers["svix-id"],
@@ -20,6 +19,7 @@ const clerkWebHooks = async (req , res) => {
          
          // Getting Data from request body 
          const {data , type} = req.body;
+         
 
 
          const userData = {

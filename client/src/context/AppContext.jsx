@@ -18,7 +18,9 @@ export const AppProvider = ({ children }) => {
 
     const currency = import.meta.env.VITE_CURRENCY || "$";
     const navigate = useNavigate();
+
     const {user} = useUser();
+    
     const {getToken} = useAuth();
 
     const [isOwner , setIsOwner] = useState(false);
@@ -33,7 +35,7 @@ export const AppProvider = ({ children }) => {
 
             if(data.success){
                 setIsOwner(data.role === "hotelOwner");
-                setSearchedCities(data.rececentSearchedCities);
+                setSearchedCities(data.recentSearchedCities);
             }
             else{
                 //Retry Fetching User Details after 5 seconds
@@ -44,7 +46,7 @@ export const AppProvider = ({ children }) => {
         }
 
         catch(error){
-           toast.error(error);
+           toast.error(error.message);
         }
     }
 
@@ -52,7 +54,6 @@ export const AppProvider = ({ children }) => {
         if(user){
             fetchUser();
         }
-
     },[user]);
 
     const value = {
