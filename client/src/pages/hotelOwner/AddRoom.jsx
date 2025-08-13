@@ -138,7 +138,7 @@ const AddRoom = () => {
                  placeholder='0'
                  className='border border-gray-300 mt-1 rounded p-2 w-24'
                  value={inputs.pricePerNight}
-                 onChange={e => setInputs({...inputs , pricePerNight: Number(e.target.value) })}
+                 onChange={e => setInputs({...inputs , pricePerNight: e.target.value })}
               />
           </div>
 

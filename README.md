@@ -92,5 +92,6 @@
 
 - Created 'List Your Hotel' button on Navbar using that anyone can Register their hotel.
 
- 
+- Created Add Room and List Room component in Dashboard page
 
+- Completed Dashboard Section for Hotel Owner
