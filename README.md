@@ -95,3 +95,5 @@
 - Created Add Room and List Room component in Dashboard page
 
 - Completed Dashboard Section for Hotel Owner
+
+- Added functionality of Search form on home page
