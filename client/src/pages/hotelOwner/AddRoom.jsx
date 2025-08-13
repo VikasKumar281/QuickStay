@@ -53,7 +53,7 @@ const AddRoom = () => {
             images[key] && formData.append('images' , images[key])
          })   
 
-         const {data} = await axios.post('/api/rooms/' , fromData , { headers:
+         const {data} = await axios.post('/api/rooms/' , formData , { headers:
             { Authorization: `Bearer ${ await getToken()}`}
          })
 
@@ -138,7 +138,7 @@ const AddRoom = () => {
                  placeholder='0'
                  className='border border-gray-300 mt-1 rounded p-2 w-24'
                  value={inputs.pricePerNight}
-                 onChange={e => setInputs({...inputs , pricePerNight: e.target.value })}
+                 onChange={e => setInputs({...inputs , pricePerNight: Number(e.target.value) })}
               />
           </div>
 
@@ -163,7 +163,7 @@ const AddRoom = () => {
          </div>
 
          <button className='bg-blue-600 text-white px-8 py-2 rounded mt-8 cursor-pointer' disabled={loading}>
-            { loading ? 'Adding' : "Add Room"}
+            { loading ? 'Adding...' : "Add Room"}
          </button>
 
      </form>
