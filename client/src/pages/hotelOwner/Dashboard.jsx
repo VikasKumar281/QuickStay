@@ -4,7 +4,7 @@ import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 
 const Dashboard = () => {
-  const { currency, user, getToken, toast, axios } = useAppContext();
+  const { currency, user , toast, axios } = useAppContext();
 
   const [dashboardData, setDashboardData] = useState({
     bookings: [],
