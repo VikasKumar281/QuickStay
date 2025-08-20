@@ -85,7 +85,7 @@ useEffect(() => {
                             </UserButton.MenuItems>
                         </UserButton>
                       ) : (
-                           <button onClick = { openSignIn } className="bg-black text-white px-8 hover:bg-green-700 py-2.5 rounded-full ml-4 transition-all duration-500 cursor-pointer">
+                           <button onClick = { openSignIn } className="bg-black text-white px-8 hover:bg-green-900 py-2.5 rounded-full ml-4 transition-all duration-500 cursor-pointer">
                               Login
                           </button>
                           )  

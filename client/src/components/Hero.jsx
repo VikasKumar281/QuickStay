@@ -86,7 +86,7 @@ const Hero = () => {
                 <input min={1} max={4} id="guests" type="number" className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16" placeholder="0" />
             </div>
 
-            <button className='flex items-center hover:bg-blue-900 justify-center gap-1 rounded-md bg-black py-3 px-4 text-white my-auto cursor-pointer max-md:w-full max-md:py-1' >
+            <button className='flex items-center hover:bg-green-900 justify-center gap-1 rounded-md bg-black py-3 px-4 text-white my-auto cursor-pointer max-md:w-full max-md:py-1' >
                 
                 <img src={assets.searchIcon} alt ='searchIcon' className='h-7'/>  
   
