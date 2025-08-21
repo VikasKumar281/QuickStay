@@ -51,7 +51,7 @@
   - Created List Room Page .
 
 
-## Backend =>  (Run the server => npm run server )
+## Backend =>  (Run the server => nodemon run server )
 
 - Create a server folder
   - create a server.js file
@@ -106,3 +106,6 @@
 
 
 - Project Completed 👍.
+
+- For Payment Gateway we will use Stripe =>
+ - npm install stripe
