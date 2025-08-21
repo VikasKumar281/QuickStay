@@ -35,7 +35,7 @@ const RoomDetails = () => {
             }
             else{
                setIsAvailable(false)
-               toast.success("Room is not available")
+               toast.error("Room is not available")
             }
          }
          else{

@@ -4,7 +4,7 @@ import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 
 const Dashboard = () => {
-  const { currency, user , toast, axios } = useAppContext();
+  const { currency, user , toast, axios , getToken } = useAppContext();
 
   const [dashboardData, setDashboardData] = useState({
     bookings: [],
@@ -14,8 +14,8 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const { data } = await axios.get("/api/bookins/hotel", {
-        headers: { Authorization: `Bearer  { currency }{await getToken()}` },
+      const { data } = await axios.get("/api/bookings/hotel", {
+        headers: { Authorization: `Bearer  ${await getToken()}` },
       });
 
       if (data.success) {
@@ -115,7 +115,7 @@ const Dashboard = () => {
 
                 <td className="py-3 px-4 border-t border-gray-300 flex">
                   <button
-                    className={`py-1 px-3 text-xs rounded-full mx-auto  { currency }{
+                    className={`py-1 px-3 text-xs rounded-full mx-auto  ${
                       item.isPaid
                         ? "bg-green-200 text-green-600"
                         : "bg-amber-200 text-yellow-600"

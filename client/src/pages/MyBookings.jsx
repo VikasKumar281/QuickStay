@@ -12,9 +12,12 @@ const MyBookings = () => {
 
   const fetchUserBookings = async () => {
     try{
-       const { data } = await axios.get('/api/bookins/user' , {headers: {
-        Authorization: `Bearer ${await getToken()}`}})
+       const { data } = await axios.get('/api/bookings/user' , {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`
+        }});
         if(data.success){
+          console.log(data.bookings);
           setBookings(data.bookings)
         }
         else{
@@ -68,7 +71,8 @@ const MyBookings = () => {
                       <span>Guests: {booking.guests}</span>
                     </div>
 
-                    <p className='text-base'>Total: ${booking.totalPrice}</p>
+                    <p className='text-base'>Room Price: ${booking.room.pricePerNight} / night</p>
+                    <p className='text-base'>Total Price: ${booking.totalPrice}</p>
 
                   </div>
                </div>

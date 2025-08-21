@@ -1,6 +1,6 @@
 # QuickStay
 
-## Frontend =>
+## Frontend => (Run the client => npm run dev )
 - Create your react project using Vite package
   - Command => npm create vite@latest .
 
@@ -51,7 +51,7 @@
   - Created List Room Page .
 
 
-## Backend =>
+## Backend =>  (Run the server => npm run server )
 
 - Create a server folder
   - create a server.js file
@@ -97,3 +97,9 @@
 - Completed Dashboard Section for Hotel Owner
 
 - Added functionality of Search form on home page
+
+- Added functionality of room booking
+
+- Install the nodemailer package => npm install nodemailer
+
+- Added functionality of sending booking confirmation email
