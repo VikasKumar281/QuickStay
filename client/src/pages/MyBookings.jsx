@@ -17,7 +17,6 @@ const MyBookings = () => {
           Authorization: `Bearer ${await getToken()}`
         }});
         if(data.success){
-          console.log(data.bookings);
           setBookings(data.bookings)
         }
         else{

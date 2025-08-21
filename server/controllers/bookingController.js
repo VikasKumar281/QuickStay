@@ -61,8 +61,6 @@ export const checkAvailabilityAPI = async (req, res) => {
 
 export const createBooking = async (req, res) => {
   try {
-    // console.log("req.user:", req.user);
-    // console.log("req.body:", req.body);
 
     const { room, checkInDate, checkOutDate, guests } = req.body;
     const user = req.user._id;

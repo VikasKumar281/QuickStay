@@ -103,3 +103,6 @@
 - Install the nodemailer package => npm install nodemailer
 
 - Added functionality of sending booking confirmation email
+
+
+- Project Completed 👍.
