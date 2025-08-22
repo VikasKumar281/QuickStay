@@ -7,7 +7,11 @@ const connectDB = async () =>{
                 "Database Connected"
             )
         );
-        await mongoose.connect(`${process.env.MONGODB_URI}/hotel-booking`);
+      await mongoose.connect(process.env.MONGODB_URI, {
+        dbName: "hotel-booking", // ✅ safer way
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
     }
     catch (error) {
         console.log(error.message);
