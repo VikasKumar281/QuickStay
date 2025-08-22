@@ -107,5 +107,4 @@
 
 - Project Completed 👍.
 
-- For Payment Gateway we will use Stripe =>
- - npm install stripe
+- Added Experience and About page 
