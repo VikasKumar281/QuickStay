@@ -8,14 +8,14 @@ import RecommendedHotels from '../components/RecommendedHotel';
 
 const Home = () => {
   return (
-    <>
+    <div className="bg-[#f7f6f3]">
         <Hero/>
         <RecommendedHotels />
         <FeatureDestination />
         <ExclusiveOffers />
         <Testimonial/>
         <Newsletter/>
-    </>
+    </div>
   )
 }
 

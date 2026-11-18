@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { roomsDummyData } from '../../assets/assets';
 import Title from '../../components/Title';
 import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
@@ -60,7 +59,7 @@ const ListRoom = () => {
 
       <p className='text-gray-500 mt-8'>All Rooms</p>
 
-      <div className='w-full max-w-3xl text-left border border-gray-300 rounded-lg max-h-80 overflow-y-scroll mt-3'>
+      <div className='mt-3 w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm'>
         <table className='w-full'>
           <thead className='bg-gray-50'>
             <tr>

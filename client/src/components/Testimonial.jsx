@@ -7,14 +7,14 @@ import StarRatings from './StarRatings'
 
 const Testimonial = () => {
   return (
-    <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 pt-20 pb-30'>
+    <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 pt-8 pb-20'>
         <Title title="What Our Guests Say" subTitle="Discover why discerning travellers consistently choose 
           QuickStay for their exclusive and luxurious accommodations around the world."/>
 
 
           <div className="flex flex-wrap items-center gap-6 mt-20">
                 {testimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="bg-white p-6 rounded-xl shadow ">
+                    <div key={testimonial.id} className="bg-white p-6 rounded-2xl shadow-sm ring-1 ring-black/5 max-w-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <div className="flex items-center gap-3">
                             <img className="w-12 h-12 rounded-full" src={testimonial.image} alt={testimonial.name} />
                             <div>

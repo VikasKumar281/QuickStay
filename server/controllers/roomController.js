@@ -1,6 +1,7 @@
 import Hotel from "../models/Hotel.js";
 import {v2 as cloudinary} from "cloudinary";
 import Room from "../models/Room.js";
+import { getAuth } from "../middleware/authMiddleware.js";
 
 
 
@@ -11,7 +12,7 @@ export const createRoom = async (req, res) => {
   
    try {
     const { roomType, pricePerNight, amenities } = req.body;
-    const hotel = await Hotel.findOne({ owner: req.auth.userId });
+    const hotel = await Hotel.findOne({ owner: getAuth(req).userId });
 
     if (!hotel)
       return res.json({ success: false, message: "No Hotel found" });
@@ -74,7 +75,10 @@ export const getRooms = async (req, res) => {
 export const getOwnerRooms = async (req, res) => {
   try {
 
-    const hotelData = await Hotel.findOne({ owner: req.auth.userId });
+    const hotelData = await Hotel.findOne({ owner: getAuth(req).userId });
+    if (!hotelData) {
+      return res.json({ success: false, message: "No Hotel found" });
+    }
     
     const rooms = await Room.find({
         hotel: hotelData._id.toString() 
@@ -99,6 +103,9 @@ export const toggleRoomAvailability = async (req, res) => {
   try {
     const { roomId } = req.body;
     const roomData = await Room.findById(roomId);
+    if (!roomData) {
+      return res.json({ success: false, message: "Room not found" });
+    }
 
     roomData.isAvailable = !roomData.isAvailable; // Toggle availability
     await roomData.save(); // Save updated room

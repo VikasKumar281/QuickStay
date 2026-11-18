@@ -12,7 +12,7 @@ const CheckBox = ({ label , selected = false , onChange = () => { }}) => {
             
             <input type='checkbox' checked = { selected } onChange = {( e ) => onChange( e.target.checked , label )}/>
             
-            <span className='font-light selected-none'>
+            <span className='font-light select-none'>
                 {label}
             </span>
 
@@ -75,7 +75,7 @@ const AllRooms = () => {
   const sortOptions = [
 
     "Price Low to High",
-    'Price High to Low ',
+    "Price High to Low",
     'Newest First',
 
   ]
@@ -84,13 +84,12 @@ const AllRooms = () => {
   // Handle Changes for Filters and Sorting =>
   const handleFilterChange = (checked , value , type ) => {
     setSelectedFilters((prevFilters) => {
-      const updatedFilters = {...prevFilters};
-      if (checked){
-        updatedFilters[type].push(value);
-      }
-      else{
-        updatedFilters[type] = updatedFilters[type].filter(item => item !== value);
-      }
+      const updatedFilters = {
+        ...prevFilters,
+        [type]: checked
+          ? [...prevFilters[type], value]
+          : prevFilters[type].filter((item) => item !== value),
+      };
       return updatedFilters;
     })
   } 
@@ -138,7 +137,11 @@ const AllRooms = () => {
     if(!destination){
       return true;
     }
-    return room.hotel.city.toLowerCase().includes(destination.toLowerCase())
+    const query = destination.toLowerCase();
+    const city = room.hotel?.city?.toLowerCase() || '';
+    const hotelName = room.hotel?.name?.toLowerCase() || '';
+    const roomType = room.roomType?.toLowerCase() || '';
+    return city.includes(query) || hotelName.includes(query) || roomType.includes(query);
   } 
 
 
@@ -167,26 +170,32 @@ const AllRooms = () => {
   }  
 
   return (
-    <div className='flex flex-col-reverse lg:flex-row items-start justify-between
-       pt-28 md:pt-35 px-4 md:px-16 lg:px-24 xl:px-32 mb-10'>
+    <div className='flex flex-col-reverse items-start gap-10 bg-[#f7f6f3] px-4 pt-28 pb-16 md:px-16 md:pt-35 lg:flex-row lg:gap-16 lg:px-24 xl:px-32'>
         
         
-        <div>
+        <div className="min-w-0 flex-1">
           <div>
             <h1 className='font-playfair text-4xl md:text-[40px]'>
                 Hotel Rooms
             </h1>
             <p className='text-sm md:text-base text-gray-500/90 mt-2 max-w-174'>
-                Take advantage of our limited-time offers and special packages to enhance your stay and create unforgettable memories.
+                {filteredRooms.length} room{filteredRooms.length === 1 ? "" : "s"} available
+                {searchParams.get("destination") ? ` for “${searchParams.get("destination")}”` : ""}. Filter by type or price, then open a room to check dates.
             </p>
           </div>
 
+          {rooms.length > 0 && filteredRooms.length === 0 && (
+            <p className='text-gray-500 mt-10'>
+              No rooms found{searchParams.get('destination') ? ` for ${searchParams.get('destination')}` : ''}.
+            </p>
+          )}
+
           {filteredRooms.map((room) => (
-            <div key={room._id} className='flex flex-col md:flex-row items-start py-10 gap-6 border-b border-gray-300 last:pb-30 last:border-0 '>
+            <div key={room._id} className='mt-6 flex flex-col md:flex-row items-start gap-6 rounded-3xl border border-gray-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg'>
 
                 <img onClick={() => { navigate(`/rooms/${room._id}`); scrollTo(0,0)}} 
                     src={room.images[0]} alt='hotel-img' title='View Room Details'
-                    className='max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer'
+                    className='h-56 w-full md:w-1/2 rounded-2xl object-cover cursor-pointer transition duration-500 hover:scale-[1.02]'
                 /> 
 
                 <div className='md:w-1/2 flex flex-col gap-2'>
@@ -208,7 +217,7 @@ const AllRooms = () => {
                         </p>
                     </div>
 
-                    <div className='flex items-center gap-1 text-gray-500mt-2 text-sm'>
+                    <div className='mt-2 flex items-center gap-1 text-sm text-gray-500'>
                         <img src={assets.locationIcon} alt='location-icon'/>
                         <span>
                             {room.hotel.address}
@@ -232,7 +241,7 @@ const AllRooms = () => {
 
                     {/* Room Price Per Night */}
                     <p className='text-xl font-medium text-gray-700'>
-                        ${room.pricePerNight} /night
+                        {currency}{room.pricePerNight} /night
                     </p>
 
                 </div>
@@ -243,8 +252,7 @@ const AllRooms = () => {
 
 
         {/* Filters */}
-        <div className='bg-white w-80 border border-gray-300 text-gray-600
-          max-lg:mb-8 min-lg:mt-16'>
+        <aside className='w-full shrink-0 rounded-3xl border border-gray-200 bg-white text-gray-600 shadow-sm lg:sticky lg:top-28 lg:w-80'>
             
             <div className={` flex items-center justify-between px-5 py-2.5 min-lg:border-b
                  border-gray-300 ${openFilters && "border-b" }`}>
@@ -318,7 +326,7 @@ const AllRooms = () => {
 
             </div>
 
-        </div>
+        </aside>
 
 
     </div>

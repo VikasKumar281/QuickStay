@@ -1,34 +1,38 @@
-import React from 'react'
 import HotelCard from './HotelCard'
-import Title from './Title'
 import { useAppContext } from '../context/AppContext'
 
 const FeatureDestination = () => {
+  const { rooms, navigate } = useAppContext();
+  const featured = rooms.slice(0, 4);
+  if (!featured.length) return null;
 
-  const { rooms , navigate } = useAppContext();
-  
-  return rooms.length > 0 && (
-    
-    <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20'>
-        
-        <Title title='Featured Destination' subTitle = 'Discover our handpicked selection of exceptional properties around the world, offering unparalleled luxury and unforgettable experiences.' />
+  const openAll = () => {
+    navigate('/rooms');
+    scrollTo(0, 0);
+  };
 
-        <div className='flex flex-wrap items-center justify-center gap-6 mt-20'>
-        {rooms.slice(0,4).map((room , index) => (
-            <HotelCard key = {room._id} room ={room} index ={index} />
+  return (
+    <section className="px-6 py-20 md:px-16 lg:px-24">
+      <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <div className="max-w-xl">
+          <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Featured destinations</p>
+          <h2 className="mt-2 font-playfair text-4xl text-gray-900 md:text-5xl">Stays guests book first</h2>
+          <p className="mt-3 text-sm leading-relaxed text-gray-500 md:text-base">
+            Four rooms from the hotels already listed on QuickStay. Open one to check dates, amenities, and the nightly price.
+          </p>
+        </div>
+        <button onClick={openAll} className="cursor-pointer rounded-full bg-gray-900 px-6 py-3 text-sm text-white transition hover:-translate-y-0.5 hover:bg-black">
+          View all hotels
+        </button>
+      </div>
+
+      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {featured.map((room, index) => (
+          <HotelCard key={room._id} room={room} index={index} />
         ))}
-    </div>
-
-    <button onClick={() =>{
-       navigate('/rooms');
-       scrollTo(0,0) }
-       }
-       className='my-16 px-4 py-2 text-sm font-medium border border-gray-300 rounded bg-white hover:bg-gray-100 transition-all cursor-pointer '>
-       View All Destinations
-    </button>
-    
-    </div>
-  )
-}
+      </div>
+    </section>
+  );
+};
 
 export default FeatureDestination;

@@ -24,13 +24,9 @@ export const storeRecentSearchedCities = async (req,res) => {
        const {recentSearchedCity} = req.body;
        const user = req.user;
 
-       if(user.recentSearchedCities.length < 3){
-         user.recentSearchedCities.push(recentSearchedCity);
-       }
-       else{
-         user.recentSearchedCities.shift();
-         user.recentSearchedCities.push(recentSearchedCity);
-       }
+       const cities = user.recentSearchedCities.filter((city) => city !== recentSearchedCity);
+       cities.push(recentSearchedCity);
+       user.recentSearchedCities = cities.slice(-3);
 
        await user.save();
        res.json( {success: true , message: "City added" } );

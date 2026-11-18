@@ -57,14 +57,19 @@ const RoomDetails = () => {
           }
           else{
             const { data } = await axios.post('/api/bookings/book' , 
-               {room: id , checkInDate , checkOutDate , guests , paymentMethod: "Pay At Hotel"},
+               {room: id , checkInDate , checkOutDate , guests},
                {headers: {Authorization:`Bearer ${await getToken()}`}})
-               // console.log(await getToken())
                
                if(data.success){
-                  toast.success(data.message)
-                  navigate('/my-bookings')
-                  scrollTo(0,0)
+                  const payment = await axios.post('/api/bookings/stripe-payment',
+                    { bookingId: data.booking._id },
+                    { headers: { Authorization: `Bearer ${await getToken()}` } })
+                  if (payment.data.success) {
+                    window.location.href = payment.data.url
+                  } else {
+                    toast.error(payment.data.message)
+                    navigate('/my-bookings')
+                  }
                }
                else{
                   toast.error(data.message)
@@ -79,9 +84,6 @@ const RoomDetails = () => {
 
 
     useEffect(() =>{
-      //   const room = rooms.find(room => room._id === id);
-      //   room && setRoom(room);
-      //   room && setMainImage(room.images[0]);
       if (rooms && rooms.length > 0) {
          const room = rooms.find(room => room._id === id);
          if (room) {
@@ -89,7 +91,7 @@ const RoomDetails = () => {
             setMainImage(room.images[0]);
          }
       }
-    },[rooms])
+    },[rooms, id])
 
 
 
@@ -100,9 +102,8 @@ const RoomDetails = () => {
        <div className='flex flex-col md:flex-row items-start md:items-center gap-2'> 
          
          <h1 className='text-3xl md:text-4xl font-playfair'>
-            {room.hotel.name} <span className='font-inter text-sm'>({room.roomType})</span>
+            {room.hotel?.name} <span className='text-sm'>({room.roomType})</span>
          </h1>
-         <p className='text-xs font-inter py-1.5 px-3 text-white bg-orange-500 rounded-full'>20% OFF</p>
         
        </div>
 
@@ -173,9 +174,9 @@ const RoomDetails = () => {
              <div className='flex flex-col'>
                 <label htmlFor='checkInDate' className='font-medium'>Check-In</label>
                  
-                <input onChange = {(e) => setCheckInDate(e.target.value)} min = {new Date().toISOString().split('T')[0]}  
+                <input onChange = {(e) => { setCheckInDate(e.target.value); setIsAvailable(false); }} min = {new Date().toISOString().split('T')[0]}  
                   type='date' id='checkInDate' placeholder='Check-In'
-                  className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required/>
+                  className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none cursor-pointer' required/>
 
              </div>
 
@@ -184,9 +185,9 @@ const RoomDetails = () => {
              <div className='flex flex-col'>
                 <label htmlFor='checkOutDate' className='font-medium'>Check-Out</label>
                 
-                <input onChange = {(e) => setCheckOutDate(e.target.value)} min = {checkInDate} disabled = {!checkInDate}
+                <input onChange = {(e) => { setCheckOutDate(e.target.value); setIsAvailable(false); }} min = {checkInDate} disabled = {!checkInDate}
                   type='date' id='checkOutDate' placeholder='Check-Out'
-                  className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required />
+                  className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none cursor-pointer disabled:cursor-not-allowed' required />
 
              </div>
 

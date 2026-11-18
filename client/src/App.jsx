@@ -16,6 +16,9 @@ import {Toaster} from "react-hot-toast";
 import { useAppContext } from './context/AppContext';
 import Experience from './components/Experience.jsx';
 import About from './components/About.jsx';
+import Contact from './pages/Contact.jsx';
+import Info from './pages/Info.jsx';
+import HelpBot from './components/HelpBot.jsx';
 
 
 
@@ -37,6 +40,8 @@ const App = () => {
              <Route path='/my-bookings' element = { <MyBookings /> } />,
              <Route path="/experience" element={<Experience />} />
              <Route path="/about" element={<About />} />
+             <Route path="/contact" element={<Contact />} />
+             <Route path="/:slug" element={<Info />} />
 
              <Route path='/owner' element = {<Layout />}>
                 <Route index element={<Dashboard />}/>
@@ -47,6 +52,7 @@ const App = () => {
           </Routes> 
       </div>
       <Footer/>
+      {!isOwnerPath && <HelpBot />}
     </div>
   )
 };

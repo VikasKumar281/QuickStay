@@ -7,6 +7,15 @@
   font-family: Outfit;
 }
 
+html, body, #root {
+  background-color: #ffffff;
+}
+
+input[type="date"],
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
 .font-playfair{
   font-family: Playfair !important;
 } 

@@ -5,40 +5,44 @@ import { useAppContext } from '../context/AppContext';
 
 const Hero = () => {
   
-  const {navigate , getToken , axios , setSearchCities} = useAppContext();  
-  const [ destination , setDestination] = useState("");  
+  const {navigate , getToken , axios , setSearchedCities, user, rooms} = useAppContext();  
+  const [ destination , setDestination] = useState("");
+  const destinationOptions = [...new Set(rooms.map((room) => room.hotel?.city).filter(Boolean))];  
 
 
   const onSearch = async (e) => {
     e.preventDefault();
     navigate(`/rooms?destination=${destination}`)
-    // call api to save recent search cities
-    await axios.post('/api/user/stor-recent-search', {recentSearchedCity:
-        destination} , { headers: {Authorization: `Bearer ${await getToken()}`}});
+    if (!user) return;
+    try {
+      await axios.post('/api/user/store-recent-search', {recentSearchedCity:
+          destination} , { headers: {Authorization: `Bearer ${await getToken()}`}});
 
-        // add destination to searchedCities max 3 recent searched cities
-        setSearchCities((prevSearchedCities) => {
-            const updatedSearchedCities = [...prevSearchedCities, destination];
-            if(updatedSearchedCities.length > 3){
-                updatedSearchedCities.shift();
-            }
-            return updatedSearchedCities;
-        })
+      setSearchedCities((prevSearchedCities) => {
+          const updatedSearchedCities = [...prevSearchedCities, destination];
+          if(updatedSearchedCities.length > 3){
+              updatedSearchedCities.shift();
+          }
+          return updatedSearchedCities;
+      })
+    } catch (error) {
+      // Destination search already navigated; saving the recent city is optional.
+    }
   }
 
   return (
-    <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white
-      bg-[url("/src/assets/Home.jpg")] bg-no-repeat bg-cover bg-center h-screen'>
+    <div className='relative flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white
+      bg-[url("/src/assets/Home.jpg")] bg-no-repeat bg-cover bg-center h-screen before:absolute before:inset-0 before:bg-gradient-to-r before:from-black/70 before:to-black/20'>
         
-        <p className='bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-20'>The Ultimate Hotel Experience</p>
-        <h1 className='font-playfair text-2xl md:text-5xl md:text-[56px] md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4'>Discover Your Perfect Gateway Destination</h1>
+        <p className='relative z-10 bg-white/15 backdrop-blur px-3.5 py-1 rounded-full mt-20 text-sm'>The Ultimate Hotel Experience</p>
+        <h1 className='relative z-10 font-playfair text-2xl md:text-5xl md:text-[56px] md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4'>Discover Your Perfect Gateway Destination</h1>
         
-        <p className='max-w-130 mt-2 text-sm md:text-base'>Unparalleled luxury and comfort await at tha world's most exclusive hotels 
+        <p className='relative z-10 max-w-130 mt-2 text-sm md:text-base'>Unparalleled luxury and comfort await at the world's most exclusive hotels 
             and resorts. Start your journey today.
         </p>
 
 
-        <form onSubmit={onSearch} className='bg-white text-gray-500 rounded-lg px-6 py-4 mt-6  flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
+        <form onSubmit={onSearch} className='relative z-10 bg-white text-gray-500 rounded-2xl px-6 py-4 mt-6 shadow-xl flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
 
             <div>
                 <div className='flex items-center gap-2'>
@@ -54,7 +58,7 @@ const Hero = () => {
                 />
 
                 <datalist id ='destinations' >
-                   {cities.map((city,index) => (
+                   {(destinationOptions.length ? destinationOptions : cities).map((city,index) => (
                     <option value = {city} key ={index} />
                    ))}    
                 </datalist> 
@@ -78,7 +82,7 @@ const Hero = () => {
 
                     <label htmlFor="checkOut">Check out</label>
                 </div>
-                <input id="checkOut" type="date" className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" />
+                <input id="checkOut" type="date" className=" cursor-pointer rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" />
             </div>
 
             <div className='flex md:flex-col max-md:gap-2 max-md:items-center'>

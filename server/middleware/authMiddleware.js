@@ -1,20 +1,22 @@
 import User from "../models/User.js";
 
-
-
-// Middleware to check if the user is authenticated ---------------------->
+export const getAuth = (req) => {
+    const auth = typeof req.auth === "function" ? req.auth() : req.auth;
+    return auth || {};
+};
 
 export const protect = async (req, res, next) => {
-    const { userId } = req.auth;
+    const { userId } = getAuth(req);
 
     if (!userId) {
-        res.json({ success: false, message: "not authenticated" });
+        return res.json({ success: false, message: "not authenticated" });
     }
-    
-    else {
-        const user = await User.findById(userId);
-        req.user = user;
-        next();  
+
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.json({ success: false, message: "User not found" });
     }
+    req.user = user;
+    next();
 };
  

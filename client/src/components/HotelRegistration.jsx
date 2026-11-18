@@ -20,9 +20,6 @@ const HotelRegistration = () => {
       const {data} = await axios.post(`/api/hotels/` , {name , contact ,
         address , city}, {headers: { Authorization: `Bearer ${await getToken()}
       `}})
-      // console.log()
-      console.log(data.id);
-
       if(data.success){
         toast.success(data.message)
         setIsOwner(true)

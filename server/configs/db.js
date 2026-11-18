@@ -8,9 +8,7 @@ const connectDB = async () =>{
             )
         );
       await mongoose.connect(process.env.MONGODB_URI, {
-        dbName: "hotel-booking", // ✅ safer way
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+        dbName: "hotel-booking",
       });
     }
     catch (error) {
