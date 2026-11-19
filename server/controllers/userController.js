@@ -1,4 +1,36 @@
 
+import User from "../models/User.js";
+import { getAuth } from "../middleware/authMiddleware.js";
+
+export const syncUser = async (req, res) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!userId) {
+            return res.json({ success: false, message: "not authenticated" });
+        }
+
+        const email = String(req.body.email || "").trim();
+        const username = String(req.body.username || "").trim() || "Guest";
+        const image = String(req.body.image || "").trim() || "https://img.clerk.com/preview.png";
+        if (!email) {
+            return res.json({ success: false, message: "Email is required" });
+        }
+
+        let user = await User.findById(userId);
+        if (!user) {
+            user = await User.create({ _id: userId, email, username, image });
+        }
+
+        res.json({
+            success: true,
+            role: user.role,
+            recentSearchedCities: user.recentSearchedCities,
+        });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
 //  Get /api/user ----------------------------->
 
 export const getUserData = async (req, res) => {

@@ -160,6 +160,17 @@ const AllRooms = () => {
 
   
   // Clear all filters => 
+  const openRoom = (id) => {
+    const query = new URLSearchParams();
+    ["checkIn", "checkOut", "guests"].forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) query.set(key, value);
+    });
+    const search = query.toString();
+    navigate(`/rooms/${id}${search ? `?${search}` : ""}`);
+    scrollTo(0, 0);
+  };
+
   const clearFilters = () => {
     setSelectedFilters({
       roomType: [],
@@ -193,7 +204,7 @@ const AllRooms = () => {
           {filteredRooms.map((room) => (
             <div key={room._id} className='mt-6 flex flex-col md:flex-row items-start gap-6 rounded-3xl border border-gray-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg'>
 
-                <img onClick={() => { navigate(`/rooms/${room._id}`); scrollTo(0,0)}} 
+                <img onClick={() => openRoom(room._id)} 
                     src={room.images[0]} alt='hotel-img' title='View Room Details'
                     className='h-56 w-full md:w-1/2 rounded-2xl object-cover cursor-pointer transition duration-500 hover:scale-[1.02]'
                 /> 
@@ -205,7 +216,7 @@ const AllRooms = () => {
                     </p>
 
                     <p className='text-gray-800 text-3xl font-playfair cursor-pointer'
-                       onClick={() => { navigate(`/rooms/${room._id}`); scrollTo(0,0)}}
+                       onClick={() => openRoom(room._id)}
                     >
                         {room.hotel.name}
                     </p>

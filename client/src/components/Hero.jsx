@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { assets, cities } from "../assets/assets"
 import { useAppContext } from '../context/AppContext';
 
@@ -7,12 +8,24 @@ const Hero = () => {
   
   const {navigate , getToken , axios , setSearchedCities, user, rooms} = useAppContext();  
   const [ destination , setDestination] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(1);
+  const today = new Date().toISOString().split("T")[0];
   const destinationOptions = [...new Set(rooms.map((room) => room.hotel?.city).filter(Boolean))];  
 
 
   const onSearch = async (e) => {
     e.preventDefault();
-    navigate(`/rooms?destination=${destination}`)
+    if (checkIn && checkOut && checkIn >= checkOut) {
+      toast.error("Check-out must be after check-in");
+      return;
+    }
+    const query = new URLSearchParams({ destination });
+    if (checkIn) query.set("checkIn", checkIn);
+    if (checkOut) query.set("checkOut", checkOut);
+    if (guests) query.set("guests", String(guests));
+    navigate(`/rooms?${query.toString()}`)
     if (!user) return;
     try {
       await axios.post('/api/user/store-recent-search', {recentSearchedCity:
@@ -72,7 +85,7 @@ const Hero = () => {
 
                     <label htmlFor="checkIn">Check in</label>
                 </div>
-                <input id="checkIn" type="date" className=" cursor-pointer rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" />
+                <input id="checkIn" type="date" min={today} value={checkIn} onChange={(e) => setCheckIn(e.target.value)} className=" cursor-pointer rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" />
             </div>
 
             <div>
@@ -82,12 +95,12 @@ const Hero = () => {
 
                     <label htmlFor="checkOut">Check out</label>
                 </div>
-                <input id="checkOut" type="date" className=" cursor-pointer rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" />
+                <input id="checkOut" type="date" min={checkIn || today} value={checkOut} onChange={(e) => setCheckOut(e.target.value)} className=" cursor-pointer rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" />
             </div>
 
             <div className='flex md:flex-col max-md:gap-2 max-md:items-center'>
                 <label htmlFor="guests">Guests</label>
-                <input min={1} max={4} id="guests" type="number" className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16" placeholder="0" />
+                <input min={1} max={4} id="guests" type="number" value={guests} onChange={(e) => setGuests(e.target.value)} className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16" placeholder="1" />
             </div>
 
             <button className='flex items-center hover:bg-green-900 justify-center gap-1 rounded-md bg-black py-3 px-4 text-white my-auto cursor-pointer max-md:w-full max-md:py-1' >

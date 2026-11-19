@@ -55,11 +55,21 @@ export const AppProvider = ({ children }) => {
                 setIsOwner(data.role === "hotelOwner");
                 setSearchedCities(data.recentSearchedCities);
             }
+            else if (data.message === "User not found") {
+                const synced = await axios.post("/api/user/sync", {
+                    email: user?.primaryEmailAddress?.emailAddress,
+                    username: user?.fullName || "Guest",
+                    image: user?.imageUrl,
+                }, { headers: { Authorization: `Bearer ${await getToken()}` } });
+                if (synced.data.success) {
+                    setIsOwner(synced.data.role === "hotelOwner");
+                    setSearchedCities(synced.data.recentSearchedCities || []);
+                } else {
+                    toast.error(synced.data.message);
+                }
+            }
             else{
-                //Retry Fetching User Details after 5 seconds
-                setTimeout(() => {
-                    fetchUser();
-                },5000);
+                toast.error(data.message);
             }
         }
 

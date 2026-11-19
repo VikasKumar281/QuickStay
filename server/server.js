@@ -22,7 +22,6 @@ connectCloudinary();
 const app = express();
 
 
-// Enable Cross-Origin Resource Sharing -------------------------------------------->
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
@@ -31,26 +30,46 @@ const allowedOrigins = [
   "https://quickstay-one-inky.vercel.app",
 ];
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  try {
+    const { hostname } = new URL(origin);
+    return hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+};
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (isAllowedOrigin(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  }
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-      return;
-    }
-    callback(new Error("Not allowed by CORS"));
+    callback(null, isAllowedOrigin(origin));
   },
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
 
 
+app.post("/api/clerk", express.raw({ type: "application/json" }), clerkWebHooks);
+
 // Middleware ----------------->
 app.use(express.json());
 app.use(clerkMiddleware());
-
-
-// API to listen Clerk Webhook -------------------------------------->
-app.use("/api/clerk" , clerkWebHooks);
 
 
 app.get('/' , (req , res) => res.send("API is working"));
@@ -65,4 +84,8 @@ app.use('/api/subscribe' , subscriberRouter);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT , () => console.log(`Server running on port ${PORT}`)); 
+if (!process.env.VERCEL) {
+  app.listen(PORT , () => console.log(`Server running on port ${PORT}`));
+}
+
+export default app; 

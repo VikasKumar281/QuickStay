@@ -13,6 +13,22 @@ const MyBookings = () => {
   const [bookings , setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const cancelBooking = async (bookingId) => {
+    try {
+      const { data } = await axios.post('/api/bookings/cancel', { bookingId }, {
+        headers: { Authorization: `Bearer ${await getToken()}` }
+      });
+      if (data.success) {
+        toast.success(data.message);
+        fetchUserBookings();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const payNow = async (bookingId) => {
     try {
       const { data } = await axios.post('/api/bookings/stripe-payment', { bookingId }, {
@@ -106,7 +122,7 @@ const MyBookings = () => {
           return (
             <section key={section} className='mt-10'>
               <h2 className='text-lg font-medium text-gray-800'>{section}</h2>
-              <BookingList bookings={list} currency={currency} payNow={payNow} />
+              <BookingList bookings={list} currency={currency} payNow={payNow} cancelBooking={cancelBooking} />
             </section>
           );
         })}
@@ -114,7 +130,7 @@ const MyBookings = () => {
   )
 }
 
-const BookingList = ({ bookings, currency, payNow }) => (
+const BookingList = ({ bookings, currency, payNow, cancelBooking }) => (
         <div className='mt-4 flex max-w-5xl flex-col gap-5'>
           {bookings.map((booking) => {
             const nights = Math.max(1, Math.ceil((new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 3600 * 24)));
@@ -160,11 +176,18 @@ const BookingList = ({ bookings, currency, payNow }) => (
                    </p>
                  </div>
 
-                 {!booking.isPaid && (
-                  <button onClick={() => payNow(booking._id)} className='mt-4 cursor-pointer rounded-full bg-black px-5 py-2 text-sm text-white transition hover:bg-green-900'>
-                     Pay Now
-                  </button>
-                 )}
+                 <div className="mt-4 flex flex-wrap gap-2">
+                   {!booking.isPaid && booking.status !== "cancelled" && (
+                    <button onClick={() => payNow(booking._id)} className='cursor-pointer rounded-full bg-black px-5 py-2 text-sm text-white transition hover:bg-green-900'>
+                       Pay Now
+                    </button>
+                   )}
+                   {booking.status !== "cancelled" && new Date(booking.checkInDate) >= new Date(new Date().toDateString()) && (
+                    <button onClick={() => cancelBooking(booking._id)} className='cursor-pointer rounded-full border border-gray-300 px-5 py-2 text-sm'>
+                       Cancel
+                    </button>
+                   )}
+                 </div>
                </div>
             </article>
             );

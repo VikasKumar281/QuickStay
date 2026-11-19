@@ -7,7 +7,11 @@ import Hotel from "../models/Hotel.js";
 import transporter from '../configs/nodemailer.js';
 import { getAuth } from '../middleware/authMiddleware.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const getStripe = () => {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  return new Stripe(key);
+};
 
 
 
@@ -198,9 +202,30 @@ export const getHotelBookings = async (req, res) => {
 
 
 
+export const cancelBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.body.bookingId);
+    if (!booking || booking.user !== req.user._id) {
+      return res.json({ success: false, message: "Booking not found" });
+    }
+    if (booking.status === "cancelled") {
+      return res.json({ success: false, message: "Booking is already cancelled" });
+    }
+    if (new Date(booking.checkInDate) < new Date(new Date().toDateString())) {
+      return res.json({ success: false, message: "This stay has already started" });
+    }
+    booking.status = "cancelled";
+    await booking.save();
+    res.json({ success: true, message: booking.isPaid ? "Booking cancelled. Payment is not refunded automatically." : "Booking cancelled" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export const stripePayment = async(req , res) => {
   try{
-    if (!process.env.STRIPE_SECRET_KEY) {
+    const stripe = getStripe();
+    if (!stripe) {
       return res.json({ success: false, message: "Stripe is not configured" });
     }
 
@@ -215,7 +240,7 @@ export const stripePayment = async(req , res) => {
 
     const roomData = await Room.findById(booking.room).populate("hotel");
     const hotelName = roomData?.hotel?.name || "Hotel room";
-    const origin = req.headers.origin;
+    const origin = req.headers.origin || "https://quickstay-one-inky.vercel.app";
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -244,6 +269,10 @@ export const stripePayment = async(req , res) => {
 
 export const verifyStripePayment = async (req, res) => {
   try {
+    const stripe = getStripe();
+    if (!stripe) {
+      return res.json({ success: false, message: "Stripe is not configured" });
+    }
     const { sessionId } = req.body;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 

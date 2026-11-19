@@ -14,11 +14,9 @@ const clerkWebHooks = async (req , res) => {
          };
 
          //Verifying Headers
-         await whook.verify(JSON.stringify(req.body), headers);
-      
-         
-         // Getting Data from request body 
-         const {data , type} = req.body;
+         const payload = Buffer.isBuffer(req.body) ? req.body.toString("utf8") : JSON.stringify(req.body);
+         whook.verify(payload, headers);
+         const { data, type } = JSON.parse(payload);
          
 
          // Switch Cases for different Events
@@ -27,7 +25,7 @@ const clerkWebHooks = async (req , res) => {
                 const userData = {
                   _id: data.id,
                   email: data.email_addresses[0].email_address,
-                  username: data.first_name + " " + data.last_name,
+                  username: `${data.first_name || ""} ${data.last_name || ""}`.trim() || "Guest",
                   image: data.image_url,
             }
                 await User.create(userData);
@@ -38,7 +36,7 @@ const clerkWebHooks = async (req , res) => {
                 const userData = {
                   _id: data.id,
                   email: data.email_addresses[0].email_address,
-                  username: data.first_name + " " + data.last_name,
+                  username: `${data.first_name || ""} ${data.last_name || ""}`.trim() || "Guest",
                   image: data.image_url,
                 }
                 await User.findByIdAndUpdate(data.id, userData);

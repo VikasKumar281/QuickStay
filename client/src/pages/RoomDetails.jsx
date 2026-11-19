@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { assets, facilityIcons, roomCommonData } from '../assets/assets.js';
 import StarRatings from '../components/StarRatings.jsx';
 import { useAppContext } from '../context/AppContext.jsx';
@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 
 const RoomDetails = () => {
     const { id } = useParams();
-    const {rooms , getToken , axios , navigate} = useAppContext();
+    const {rooms , getToken , axios , navigate, user, currency} = useAppContext();
+    const [searchParams] = useSearchParams();
     const [room , setRoom] = useState(null);
     const [mainImage , setMainImage] = useState(null);
     const [checkInDate , setCheckInDate] = useState(null);
@@ -52,6 +53,10 @@ const RoomDetails = () => {
     const onSubmitHandler = async(e) => {
       try{
           e.preventDefault();
+          if (!user) {
+            toast.error("Please sign in to book this room");
+            return;
+          }
           if(!isAvailable){
             return checkAvailability();
           }
@@ -82,6 +87,16 @@ const RoomDetails = () => {
     }
 
 
+
+    useEffect(() => {
+      if (searchParams.get("checkIn")) setCheckInDate(searchParams.get("checkIn"));
+      if (searchParams.get("checkOut")) setCheckOutDate(searchParams.get("checkOut"));
+      if (searchParams.get("guests")) setGuests(Number(searchParams.get("guests")) || 1);
+    }, []);
+
+    const nights = checkInDate && checkOutDate
+      ? Math.ceil((new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 3600 * 24))
+      : 0;
 
     useEffect(() =>{
       if (rooms && rooms.length > 0) {
@@ -160,7 +175,10 @@ const RoomDetails = () => {
               </div>
 
         {/* Room Price  */}
-       <p className='text-2xl font-medium'>${room.pricePerNight}/night</p>
+       <p className='text-2xl font-medium'>{currency}{room.pricePerNight}/night</p>
+       {nights > 0 && (
+         <p className='mt-1 text-sm text-gray-500'>{nights} night{nights > 1 ? "s" : ""} · total {currency}{room.pricePerNight * nights} for {guests} guest{Number(guests) > 1 ? "s" : ""}</p>
+       )}
        
        </div>
 
@@ -174,7 +192,7 @@ const RoomDetails = () => {
              <div className='flex flex-col'>
                 <label htmlFor='checkInDate' className='font-medium'>Check-In</label>
                  
-                <input onChange = {(e) => { setCheckInDate(e.target.value); setIsAvailable(false); }} min = {new Date().toISOString().split('T')[0]}  
+                <input value={checkInDate || ""} onChange = {(e) => { setCheckInDate(e.target.value); setIsAvailable(false); }} min = {new Date().toISOString().split('T')[0]}  
                   type='date' id='checkInDate' placeholder='Check-In'
                   className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none cursor-pointer' required/>
 
@@ -185,7 +203,7 @@ const RoomDetails = () => {
              <div className='flex flex-col'>
                 <label htmlFor='checkOutDate' className='font-medium'>Check-Out</label>
                 
-                <input onChange = {(e) => { setCheckOutDate(e.target.value); setIsAvailable(false); }} min = {checkInDate} disabled = {!checkInDate}
+                <input value={checkOutDate || ""} onChange = {(e) => { setCheckOutDate(e.target.value); setIsAvailable(false); }} min = {checkInDate} disabled = {!checkInDate}
                   type='date' id='checkOutDate' placeholder='Check-Out'
                   className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none cursor-pointer disabled:cursor-not-allowed' required />
 
@@ -196,7 +214,7 @@ const RoomDetails = () => {
              <div className='flex flex-col'>
                 <label htmlFor='guests' className='font-medium'>Guests</label>
                 
-                <input onChange = {(e) => setGuests(e.target.value)} value={guests} type='number' id='guests' placeholder='1'
+                <input onChange = {(e) => setGuests(e.target.value)} value={guests} min={1} max={4} type='number' id='guests' placeholder='1'
                   className='max-w-20 rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required />
 
              </div>
