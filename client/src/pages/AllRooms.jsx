@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { assets, facilityIcons } from '../assets/assets'
 import { useSearchParams } from 'react-router-dom'
-import StarRatings from '../components/StarRatings';
 import { useAppContext } from '../context/AppContext';
 
 
@@ -186,79 +185,62 @@ const AllRooms = () => {
         
         <div className="min-w-0 flex-1">
           <div>
-            <h1 className='font-playfair text-4xl md:text-[40px]'>
-                Hotel Rooms
-            </h1>
-            <p className='text-sm md:text-base text-gray-500/90 mt-2 max-w-174'>
-                {filteredRooms.length} room{filteredRooms.length === 1 ? "" : "s"} available
-                {searchParams.get("destination") ? ` for “${searchParams.get("destination")}”` : ""}. Filter by type or price, then open a room to check dates.
+            <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Hotels</p>
+            <h1 className='mt-2 font-playfair text-4xl md:text-5xl'>Hotel rooms</h1>
+            <p className='mt-3 max-w-xl text-sm text-gray-500 md:text-base'>
+                {filteredRooms.length} room{filteredRooms.length === 1 ? "" : "s"}
+                {searchParams.get("destination") ? ` in ${searchParams.get("destination")}` : ""}.
+                {searchParams.get("checkIn") && searchParams.get("checkOut")
+                  ? ` ${searchParams.get("checkIn")} to ${searchParams.get("checkOut")}.`
+                  : " Open a room to choose dates."}
             </p>
           </div>
 
           {rooms.length > 0 && filteredRooms.length === 0 && (
-            <p className='text-gray-500 mt-10'>
-              No rooms found{searchParams.get('destination') ? ` for ${searchParams.get('destination')}` : ''}.
+            <p className='mt-10 rounded-2xl bg-white px-5 py-4 text-gray-500'>
+              No rooms match these filters.
             </p>
           )}
 
+          <div className="mt-8 flex flex-col gap-5">
           {filteredRooms.map((room) => (
-            <div key={room._id} className='mt-6 flex flex-col md:flex-row items-start gap-6 rounded-3xl border border-gray-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg'>
+            <article key={room._id} className='grid overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg md:grid-cols-[280px_1fr]'>
 
-                <img onClick={() => openRoom(room._id)} 
-                    src={room.images[0]} alt='hotel-img' title='View Room Details'
-                    className='h-56 w-full md:w-1/2 rounded-2xl object-cover cursor-pointer transition duration-500 hover:scale-[1.02]'
-                /> 
+                <img onClick={() => openRoom(room._id)}
+                    src={room.images?.[0]} alt=''
+                    className='h-56 w-full cursor-pointer object-cover md:h-full'
+                />
 
-                <div className='md:w-1/2 flex flex-col gap-2'>
-                    
-                    <p className='text-gray-500'>
-                        {room.hotel.city}
-                    </p>
-
-                    <p className='text-gray-800 text-3xl font-playfair cursor-pointer'
-                       onClick={() => openRoom(room._id)}
-                    >
-                        {room.hotel.name}
-                    </p>
-
-                    <div className='flex items-center'>
-                        <StarRatings />
-                        <p className='ml-2'>
-                            200+ reviews
-                        </p>
+                <div className='flex flex-col p-5'>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className='cursor-pointer font-playfair text-3xl text-gray-900' onClick={() => openRoom(room._id)}>
+                          {room.hotel?.name || "Hotel"}
+                      </p>
+                      <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-600">{room.roomType}</span>
                     </div>
 
                     <div className='mt-2 flex items-center gap-1 text-sm text-gray-500'>
-                        <img src={assets.locationIcon} alt='location-icon'/>
-                        <span>
-                            {room.hotel.address}
-                        </span>
+                        <img src={assets.locationIcon} alt=''/>
+                        <span>{room.hotel?.city}{room.hotel?.address ? ` · ${room.hotel.address}` : ""}</span>
                     </div>
 
-                    {/* Room Amenities */}
-                    <div className='flex flex-wrap items-center mt-3 mb-6 gap-4'>
-                       {room.amenities.map((item , index) => (
-                        <div key ={ index } className='flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F5FF]/70'>
-                            <img src={facilityIcons[item]} alt={item} 
-                              className='w-5 h-5'/>
-
-                            <p className='text-xs'>
-                               {item}     
-                            </p>
-
+                    <div className='mt-4 flex flex-wrap gap-2'>
+                       {(room.amenities || []).map((item, index) => (
+                        <div key={index} className='flex items-center gap-2 rounded-full bg-[#f7f6f3] px-3 py-1.5'>
+                            {facilityIcons[item] && <img src={facilityIcons[item]} alt='' className='h-4 w-4'/>}
+                            <p className='text-xs'>{item}</p>
                         </div>
                        ))}
                     </div>
 
-                    {/* Room Price Per Night */}
-                    <p className='text-xl font-medium text-gray-700'>
-                        {currency}{room.pricePerNight} /night
-                    </p>
-
+                    <div className="mt-auto flex items-center justify-between pt-5">
+                      <p className='text-xl font-medium text-gray-900'>{currency}{room.pricePerNight}<span className="text-sm font-normal text-gray-500"> / night</span></p>
+                      <button type="button" onClick={() => openRoom(room._id)} className="cursor-pointer rounded-full bg-gray-900 px-5 py-2 text-sm text-white">View room</button>
+                    </div>
                 </div>
-
-            </div>    
+            </article>
           ))}
+          </div>
         </div>
 
 
@@ -267,7 +249,7 @@ const AllRooms = () => {
             
             <div className={` flex items-center justify-between px-5 py-2.5 min-lg:border-b
                  border-gray-300 ${openFilters && "border-b" }`}>
-                <p className='text-base font-medium text-gray-800'>FILTERS</p>
+                <p className='text-base font-medium text-gray-800'>Filters</p>
                 <div className='text-xs cursor-pointer'>
                     
                     <span onClick={() => setOpenFilters(!openFilters)} className='lg:hidden'>
@@ -275,7 +257,7 @@ const AllRooms = () => {
                     </span>
                     
                     <span
-                      className="hidden lg:block cursor-pointer text-blue-600 hover:underline"
+                      className="hidden cursor-pointer text-sm text-gray-900 underline lg:block"
                       onClick={clearFilters}
                     >
                       CLEAR
