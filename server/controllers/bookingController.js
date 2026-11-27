@@ -285,12 +285,42 @@ export const verifyStripePayment = async (req, res) => {
       return res.json({ success: false, message: "Booking not found" });
     }
 
+    const alreadyPaid = booking.isPaid;
     booking.isPaid = true;
     booking.status = "confirmed";
     booking.paymentMetod = "Stripe";
     await booking.save();
 
-    res.json({ success: true, message: "Payment successful" });
+    if (!alreadyPaid && req.user.email) {
+      const roomData = await Room.findById(booking.room);
+      const hotel = await Hotel.findById(booking.hotel);
+      const currency = process.env.CURRENCY || "$";
+      transporter.sendMail({
+        from: process.env.SENDER_EMAIL,
+        to: req.user.email,
+        subject: "Your QuickStay booking is confirmed",
+        html: `
+          <h2>Booking confirmed</h2>
+          <p>Dear ${req.user.username || "Guest"},</p>
+          <p>Your payment was received. Here are your stay details:</p>
+          <ul>
+            <li><strong>Booking ID:</strong> ${booking._id}</li>
+            <li><strong>Hotel:</strong> ${hotel?.name || "Hotel"}</li>
+            <li><strong>Address:</strong> ${hotel?.address || ""}</li>
+            <li><strong>Room:</strong> ${roomData?.roomType || "Room"}</li>
+            <li><strong>Check-in:</strong> ${new Date(booking.checkInDate).toDateString()}</li>
+            <li><strong>Check-out:</strong> ${new Date(booking.checkOutDate).toDateString()}</li>
+            <li><strong>Guests:</strong> ${booking.guests}</li>
+            <li><strong>Amount paid:</strong> ${currency}${booking.totalPrice}</li>
+          </ul>
+          <p>We look forward to welcoming you.</p>
+        `,
+      }).catch((mailError) => {
+        console.log(mailError.message);
+      });
+    }
+
+    res.json({ success: true, message: "Payment successful. A confirmation email is on its way." });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
