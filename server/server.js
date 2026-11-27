@@ -35,7 +35,7 @@ const isAllowedOrigin = (origin) => {
   if (allowedOrigins.includes(origin)) return true;
   try {
     const { hostname } = new URL(origin);
-    return hostname.endsWith(".vercel.app");
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".vercel.app");
   } catch {
     return false;
   }
@@ -57,7 +57,11 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin(origin, callback) {
-    callback(null, isAllowedOrigin(origin));
+    if (isAllowedOrigin(origin)) {
+      callback(null, origin || true);
+      return;
+    }
+    callback(null, false);
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
